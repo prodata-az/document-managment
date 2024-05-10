@@ -1,4 +1,4 @@
 export class DocumentByCategory {
-    categoryName: string;z
+    categoryName: string;
     documentCount: number;
 }

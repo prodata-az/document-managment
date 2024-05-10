@@ -7,4 +7,5 @@ export abstract class ResourceParameter {
   name = '';
   totalCount = 0;
   metaTags = '';
+  farmerid = '';
 }

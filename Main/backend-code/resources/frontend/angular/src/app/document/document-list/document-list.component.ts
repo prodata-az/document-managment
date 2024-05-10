@@ -18,7 +18,7 @@ import { ResponseHeader } from '@core/domain-classes/document-header';
 import { DocumentInfo } from '@core/domain-classes/document-info';
 import { DocumentOperation } from '@core/domain-classes/document-operation';
 import { DocumentResource } from '@core/domain-classes/document-resource';
-import { DocumentView } from '@core/domain-classes/document-view';
+import { DocumentView, StatusEnum } from '@core/domain-classes/document-view';
 import { DocumentVersion } from '@core/domain-classes/documentVersion';
 import { CategoryService } from '@core/services/category.service';
 import { ClonerService } from '@core/services/clone.service';
@@ -106,6 +106,15 @@ export class DocumentListComponent
     this.getResourceParameter();
   }
 
+  getViolationStatus(violation: boolean): string {
+    return violation ? 'Active' : 'Deactive';
+  }
+
+  setStatusPosition(status: StatusEnum): string {
+  return StatusEnum[status];
+  }
+
+
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
@@ -153,7 +162,9 @@ export class DocumentListComponent
       .pipe(
         debounceTime(1000),
         distinctUntilChanged(),
-        tap((value: any) => {
+        tap((value: any) => {         
+          console.log(this.createdDate);
+           
           this.paginator.pageIndex = 0;
           this.documentResource.skip = 0;
           if (value) {
@@ -174,6 +185,9 @@ export class DocumentListComponent
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
+  // isViolationBoolean(violation: any): boolean {
+  //   return typeof violation === 'boolean';
+  // }
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected()

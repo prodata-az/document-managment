@@ -1,26 +1,17 @@
 import { RouteInfo } from './sidebar.metadata';
 
 export const ROUTES: RouteInfo[] = [
+  // {
+  //   path: 'Document-Storage',
+  //   title: 'ASSIGNED_DOCUMENTS',
+  //   icon: 'list',
+  //   class: '',
+  //   groupTitle: false,
+  //   claims: [],
+  //   submenu: [],
+  // },
   {
-    path: 'dashboard',
-    title: 'DASHBOARD',
-    icon: 'layers',
-    class: '',
-    groupTitle: false,
-    claims: ['DASHBOARD_VIEW_DASHBOARD'],
-    submenu: [],
-  },
-  {
-    path: '',
-    title: 'ASSIGNED_DOCUMENTS',
-    icon: 'list',
-    class: '',
-    groupTitle: false,
-    claims: [],
-    submenu: [],
-  },
-  {
-    path: 'documents',
+    path: 'All-Documents',
     title: 'ALL_DOCUMENTS',
     icon: 'file-text',
     class: '',
@@ -29,7 +20,16 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'categories',
+    path: 'document-home',
+    title: 'Document Home',
+    icon: 'file-text',
+    class: '',
+    groupTitle: false,
+    claims: [],
+    submenu: [],
+  },
+  {
+    path: 'document-categories',
     title: 'DOCUMENT_CATEGORIES',
     icon: 'file',
     class: '',
@@ -38,7 +38,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'document-audit-trails',
+    path: 'document-audit-trail',
     title: 'DOCUMENTS_AUDIT_TRAIL',
     icon: 'activity',
     class: '',
@@ -65,16 +65,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'roles/users',
-    title: 'ROLE_USER',
-    icon: 'user-check',
-    class: '',
-    groupTitle: false,
-    claims: ['USER_ASSIGN_USER_ROLE'],
-    submenu: [],
-  },
-  {
-    path: 'reminders',
+    path: 'reminder',
     title: 'REMINDER',
     icon: 'bell',
     class: '',
@@ -83,7 +74,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   {
-    path: 'login-audit',
+    path: 'login-audits',
     title: 'LOGIN_AUDITS',
     icon: 'log-in',
     class: '',
@@ -100,7 +91,7 @@ export const ROUTES: RouteInfo[] = [
     claims: ['EMAIL_MANAGE_SMTP_SETTINGS', 'SETTING_MANAGE_PROFILE', 'SETTING_MANAGE_LANGUAGE'],
     submenu: [
       {
-        path: 'email-smtp',
+        path: 'smtp-setting',
         title: 'SMTP_SETTING',
         icon: 'mail',
         class: 'ml-menu',

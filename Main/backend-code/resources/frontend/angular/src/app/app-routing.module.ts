@@ -5,6 +5,7 @@ import { AuthGuard } from '@core/security/auth.guard';
 import { MyProfileComponent } from './user/my-profile/my-profile.component';
 import { AppComponent } from './app.component';
 import { CompanyProfileResolver } from './company-profile/company-profile.resolver';
+import { HomeComponent } from './document/document-home/document-home.component';
 
 const routes: Routes = [
   {
@@ -59,19 +60,30 @@ const routes: Routes = [
               import('./user/user.module').then((m) => m.UserModule),
           },
           {
-            path: 'categories',
+            path: 'document-categories',
             canLoad: [AuthGuard],
             loadChildren: () =>
               import('./category/category.module').then((m) => m.CategoryModule),
           },
           {
-            path: 'documents',
+            path: 'All-Documents',
             canLoad: [AuthGuard],
             loadChildren: () =>
               import('./document/document.module').then((m) => m.DocumentModule),
           },
           {
-            path: 'document-audit-trails',
+            path: 'document-home',
+            canLoad: [AuthGuard],
+            component: HomeComponent
+          },
+          {
+            path: 'Document-Storage',
+            canLoad: [AuthGuard],
+            loadChildren: () =>
+              import('./document-library/document-library.module').then((m) => m.DocumentLibraryModule),
+          },
+          {
+            path: 'document-audit-trail',
             canLoad: [AuthGuard],
             loadChildren: () =>
               import('./document-audit-trail/document-audit-trail.module').then(
@@ -79,7 +91,7 @@ const routes: Routes = [
               ),
           },
           {
-            path: 'login-audit',
+            path: 'login-audits',
             canLoad: [AuthGuard],
             loadChildren: () =>
               import('./login-audit/login-audit.module').then(
@@ -95,12 +107,12 @@ const routes: Routes = [
               ),
           },
           {
-            path: 'reminders',
+            path: 'reminder',
             loadChildren: () =>
               import('./reminder/reminder.module').then((m) => m.ReminderModule),
           },
           {
-            path: 'email-smtp',
+            path: 'smtp-setting',
             loadChildren: () =>
               import('./email-smtp-setting/email-smtp-setting.module').then(
                 (m) => m.EmailSmtpSettingModule

@@ -46,7 +46,7 @@ class PermissionSeeder extends Seeder
                     'isDeleted' => 0
                 ], [
                     'id' => 'fc97dc8f-b4da-46b1-a179-ab206d8b7efd',
-                    'name' => 'Assigned Documents',
+                    'name' => 'Document Storage',
                     'order' => 3,
                     'createdBy' => $user->id,
                     'modifiedBy' => $user->id,

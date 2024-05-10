@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Output } from '@angular/core';
 import {
   UntypedFormGroup,
   FormArray,
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { Category } from '@core/domain-classes/category';
 import { DocumentAuditTrail } from '@core/domain-classes/document-audit-trail';
 import { DocumentInfo } from '@core/domain-classes/document-info';
+import { District } from '@core/domain-classes/district';
 import { DocumentOperation } from '@core/domain-classes/document-operation';
 import { DocumentMetaData } from '@core/domain-classes/documentMetaData';
 import { FileInfo } from '@core/domain-classes/file-info';
@@ -20,6 +21,7 @@ import { User } from '@core/domain-classes/user';
 import { SecurityService } from '@core/security/security.service';
 import { CategoryService } from '@core/services/category.service';
 import { CommonService } from '@core/services/common.service';
+import { DistrictService } from '@core/services/district.service';
 import { TranslationService } from '@core/services/translation.service';
 import { environment } from '@environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -35,6 +37,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
   document: DocumentInfo;
   documentForm: UntypedFormGroup;
   extension = '';
+  districts: District[]  = [];
   categories: Category[] = [];
   allCategories: Category[] = [];
   documentSource: string;
@@ -56,6 +59,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
   constructor(
     private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef,
+    private districtService: DistrictService,
     private categoryService: CategoryService,
     private commonService: CommonService,
     private documentService: DocumentService,
@@ -74,6 +78,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
     this.documentMetaTagsArray.push(this.buildDocumentMetaTag());
     this.getUsers();
     this.getRoles();
+    this.getDistricts();
   }
 
   getUsers() {
@@ -86,6 +91,14 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
     this.sub$.sink = this.commonService
       .getRolesForDropdown()
       .subscribe((roles: Role[]) => (this.roles = roles));
+  }
+  getDistricts() {
+    this.districtService.getAllDistricts().subscribe((c) => {
+      console.log(c);
+      
+      this.districts = c;
+      // this.setDeafLevel();
+    });
   }
 
   getCategories() {
@@ -155,7 +168,9 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
   createDocumentForm() {
     this.documentForm = this.fb.group({
       name: ['', [Validators.required]],
+      farmerid: ['', [Validators.required]],
       description: [''],
+      district: ['', [Validators.required]],
       categoryId: ['', [Validators.required]],
       url: [''],
       extension: ['', [Validators.required]],
@@ -245,6 +260,8 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
       categoryId: this.documentForm.get('categoryId').value,
       description: this.documentForm.get('description').value,
       name: this.documentForm.get('name').value,
+      farmerid: this.documentForm.get('farmerid').value,
+      district: this.documentForm.get('district').value,
       url: this.fileData.fileName,
       documentMetaDatas: [...documentMetaTags],
       fileData: this.fileData,

@@ -21,7 +21,7 @@ class Pages extends Model
 
     protected $fillable = [
         'name','order',
-        'modifiedBy', 'isDeleted' , 'square' , 'violation', 'status' , 'district',
+        'modifiedBy', 'isDeleted' , 'square' , 'farmerid', 'violation', 'status' , 'district',
     ];
 
     public function actionas()

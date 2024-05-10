@@ -8,6 +8,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ActionsController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DocumentCommentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -288,6 +289,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/languages', [LanguageController::class, 'getLanguages']);
     Route::get('/defaultlanguage', [LanguageController::class, 'defaultlanguage']);
     Route::get('/languageById/{id}', [LanguageController::class, 'getFileContentById']);
+
+
+
+    //districts
+    Route::get('/districts', [DistrictController::class, 'getDistricts']);
 });
 
 Route::get('/i18n/{fileName}', [LanguageController::class, 'downloadFile']);

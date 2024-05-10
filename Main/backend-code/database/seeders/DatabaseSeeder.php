@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             LanguageSeeder::class,
             PermissionSeederV2::class,
-            PermissionSeederV21::class
+            PermissionSeederV21::class,
+            DistrictSeeder::class
         ]);
     }
 }

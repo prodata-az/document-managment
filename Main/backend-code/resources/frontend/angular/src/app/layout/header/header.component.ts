@@ -3,12 +3,13 @@ import {
   Component,
   Inject,
   ElementRef,
+  Input,
   OnInit,
   Renderer2,
   HostListener,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { LanguageService } from '@core/services/language.service';
 import { WINDOW } from '@core/services/window.service';
 import { SecurityService } from '@core/security/security.service';
@@ -38,6 +39,8 @@ export class HeaderComponent implements OnInit {
   refereshReminderTimeInMinute = 10;
   logoImage = '';
   isUnReadNotification = false;
+  currentPageName: string;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(WINDOW) private window: Window,
@@ -52,6 +55,7 @@ export class HeaderComponent implements OnInit {
   ) {}
   languages: LanguageFlag[] = [];
 
+
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.window.pageYOffset ||
@@ -64,11 +68,25 @@ export class HeaderComponent implements OnInit {
     //   this.isNavbarShow = false;
     // }
   }
-  ngOnInit() {
+  ngOnInit(): void {
+    this.currentPageName = this.getCurrentPageName();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentPageName = this.getCurrentPageName();
+      }
+    });
     this.setTopLogAndName();
     this.getNotification();
     this.setDefaultLanguage();
     this.companyProfileSubscription();
+  }
+
+  getCurrentPageName(): string {
+    const url = this.router.url;
+    const segments = url.split('/');
+    let url_name = segments[segments.length - 1];
+    url_name = url_name.replace(/-/g, ' ');
+    return url_name.toUpperCase();
   }
 
   companyProfileSubscription() {

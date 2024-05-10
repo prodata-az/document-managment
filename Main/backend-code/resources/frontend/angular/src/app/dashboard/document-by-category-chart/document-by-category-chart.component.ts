@@ -9,6 +9,14 @@ import { DashboradService } from '../dashboard.service';
 export class DocumentByCategoryChartComponent implements OnInit {
   single: any[] = [];
   view: any[] = [700, 400];
+
+  colorScheme : any = {
+    name: 'custom',
+    selectable: true,
+    group: 'Ordinal',
+    domain: ['#EBDC52', '#E8E8E8', '#76C253']
+    };
+
   constructor(private dashboardService: DashboradService) { }
 
   ngOnInit(): void {

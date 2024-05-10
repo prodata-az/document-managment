@@ -30,6 +30,8 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
   @Input() categories: Category[];
   @Input() documentInfo: DocumentInfo;
   documentSource: string;
+  violationeditActive: boolean;
+  statuseditActive: boolean;
 
   get documentMetaTagsArray(): FormArray {
     return <FormArray>this.documentForm.get('documentMetaTags');
@@ -48,6 +50,8 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.violationeditActive = false;
+    this.statuseditActive = false;
     this.createDocumentForm();
     this.pushValuesDocumentMetatagArray();
     this.patchDocumentForm();
@@ -56,6 +60,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
   patchDocumentForm() {
     this.documentForm.patchValue({
       name: this.data.document.name,
+      farmerid: this.data.document.farmerid,
       square: this.data.document.square,
       violation: this.data.document.violation,
       status: this.data.document.status,
@@ -69,6 +74,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
   createDocumentForm() {
     this.documentForm = this.fb.group({
       name: ['', [Validators.required]],
+      farmerid: ['', [Validators.required]],
       square: ['', [Validators.required]],
       violation: ['', [Validators.required]],
       status: ['', [Validators.required]],
@@ -126,6 +132,7 @@ export class DocumentEditComponent extends BaseComponent implements OnInit {
       categoryId: this.documentForm.get('categoryId').value,
       description: this.documentForm.get('description').value,
       name: this.documentForm.get('name').value,
+      farmerid: this.documentForm.get('name').value,
       square: this.documentForm.get('square').value,
       violation: this.documentForm.get('violation').value,
       status: this.documentForm.get('status').value,

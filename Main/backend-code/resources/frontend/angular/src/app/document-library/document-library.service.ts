@@ -25,9 +25,14 @@ export class DocumentLibraryService {
       .set('orderBy', resource.orderBy)
       .set('pageSize', resource.pageSize.toString())
       .set('skip', resource.skip.toString())
+      .set(
+        'createDateString',
+        resource.createDate ? resource.createDate.toString() : ''
+      )
       .set('searchQuery', resource.searchQuery)
       .set('categoryId', resource.categoryId)
       .set('name', resource.name)
+      .set('farmerid', resource.farmerid)
       .set('metaTags', resource.metaTags)
       .set('id', resource.id.toString());
 

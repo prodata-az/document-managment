@@ -22,7 +22,7 @@ class Categories extends Model
     const UPDATED_AT = 'modifiedDate';
 
     protected $fillable = [
-        'name', 'description', 'square', 'violation', 'status' , 'district','createdBy', 'parentId',
+        'name', 'description', 'square','farmerid', 'violation', 'status' , 'district','createdBy', 'parentId',
         'modifiedBy', 'isDeleted'
     ];
 

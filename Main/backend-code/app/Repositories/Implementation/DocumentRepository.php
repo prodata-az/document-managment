@@ -44,7 +44,7 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
     public function getDocuments($attributes)
     {
 
-        $query = Documents::select(['documents.id', 'documents.name', 'documents.url', 'documents.createdDate', 'documents.description','documents.square','documents.violation','documents.status','documents.district','categories.id as categoryId', 'categories.name as categoryName', DB::raw("CONCAT(users.firstName,' ', users.lastName) as createdByName")])
+        $query = Documents::select(['documents.id', 'documents.name', 'documents.url', 'documents.createdDate', 'documents.description','documents.square', 'documents.farmerid','documents.violation','documents.status','documents.district','categories.id as categoryId', 'categories.name as categoryName', DB::raw("CONCAT(users.firstName,' ', users.lastName) as createdByName")])
             ->join('categories', 'documents.categoryId', '=', 'categories.id')
             ->join('users', 'documents.createdBy', '=', 'users.id');
 
@@ -70,6 +70,10 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $query = $query->where('documents.name', 'like', '%' . $attributes->name . '%')
                 ->orWhere('documents.description',  'like', '%' . $attributes->name . '%');
         }
+
+        // if ($attributes->farmerid) {
+        //     $query = $query->where('documents.farmerid', 'like', '%' . $attributes->farmerid . '%');
+        // } //new add
 
         if ($attributes->metaTags) {
             $metaTags = $attributes->metaTags;
@@ -109,6 +113,10 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
                 ->orWhere('documents.description',  'like', '%' . $attributes->name . '%');
         }
 
+        // if ($attributes->farmerid) {
+        //     $query = $query->where('documents.farmerid', 'like', '%' . $attributes->farmerid . '%');
+        // } //new add
+
         if ($attributes->metaTags) {
             $metaTags = $attributes->metaTags;
             $query = $query->whereExists(function ($query) use ($metaTags) {
@@ -142,6 +150,7 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $model->url = $path;
             $model->categoryId = $request->categoryId;
             $model->square = $request->square;
+            $model->farmerid = $request->farmerid;
             $model->violation = $request->violation;
             $model->status = $request->status;
             $model->district = $request->district;
@@ -274,6 +283,7 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $model->name = $request->name;
             $model->description = $request->description;
             $model->square = $request->square;
+            $model->farmerid = $request->farmerid;
             $model->violation = $request->violation;
             $model->status = $request->status;
             $model->district = $request->district;
@@ -310,7 +320,7 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             ->where('userId', $userId)
             ->get();
         $query = Documents::select([
-            'documents.id', 'documents.name', 'documents.url', 'documents.createdDate', 'documents.description', 'categories.id as categoryId', 'categories.name as categoryName',
+            'documents.id', 'documents.name','documents.district' , 'documents.url','documents.status' ,'documents.farmerid' , 'documents.createdDate', 'documents.description', 'categories.id as categoryId', 'categories.name as categoryName',
             DB::raw("CONCAT(users.firstName,' ', users.lastName) as createdByName"),
             DB::raw("(SELECT max(documentUserPermissions.endDate) FROM documentUserPermissions
                      WHERE documentUserPermissions.documentId = documents.id and documentUserPermissions.isTimeBound =1
@@ -365,6 +375,8 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $query = $query->orderBy('categories.name', $direction);
         } else if ($orderBy == 'name') {
             $query = $query->orderBy('documents.name', $direction);
+        } else if ($orderBy == 'farmerid') {
+            $query = $query->orderBy('documents.farmerid', $direction);
         } else if ($orderBy == 'createdDate') {
             $query = $query->orderBy('documents.createdDate', $direction);
         } else if ($orderBy == 'createdBy') {
@@ -378,6 +390,18 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
         if ($attributes->name) {
             $query = $query->where('documents.name', 'like', '%' . $attributes->name . '%')
                 ->orWhere('documents.description',  'like', '%' . $attributes->name . '%');
+        }
+
+        if ($attributes->farmerid) {
+            $query = $query->where('documents.farmerid', 'like', '%' . $attributes->farmerid . '%');
+        } //new add
+
+        if ($attributes->createDateString) {
+
+            $startDate = Carbon::parse($attributes->createDateString)->setTimezone('UTC');
+            $endDate = Carbon::parse($attributes->createDateString)->setTimezone('UTC')->addDays(1)->addSeconds(-1);
+
+            $query = $query->whereBetween('documents.createdDate', [$startDate, $endDate]);
         }
 
         if ($attributes->metaTags) {
@@ -448,6 +472,10 @@ class DocumentRepository extends BaseRepository implements DocumentRepositoryInt
             $query = $query->where('documents.name', 'like', '%' . $attributes->name . '%')
                 ->orWhere('documents.description',  'like', '%' . $attributes->name . '%');
         }
+
+        if ($attributes->farmerid) {
+            $query = $query->where('documents.farmerid', 'like', '%' . $attributes->farmerid . '%');
+        } //new add
 
         if ($attributes->metaTags) {
             $metaTags = $attributes->metaTags;

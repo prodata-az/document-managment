@@ -39,6 +39,7 @@ export class DocumentService {
     formData.append('uploadFile', document.fileData);
     formData.append('name', document.name);
     formData.append('square', document.square);
+    formData.append('farmerid', document.farmerid);
     formData.append('violation', document.violation);
     formData.append('status', document.status);
     formData.append('district', document.district);

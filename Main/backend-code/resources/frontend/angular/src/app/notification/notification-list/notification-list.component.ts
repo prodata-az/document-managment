@@ -120,6 +120,7 @@ export class NotificationListComponent
           documentId: data.id,
           name: data.name,
           square: data.square,
+          farmerid: data.farmerid,
           violation: data.violation,
           status: data.status,
           district: data.district,

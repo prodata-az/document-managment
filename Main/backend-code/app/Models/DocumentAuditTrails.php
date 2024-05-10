@@ -22,7 +22,7 @@ class DocumentAuditTrails extends Model
     const UPDATED_AT = 'modifiedDate';
 
     protected $fillable = [
-        'documentId', 'operationName','assignToUserId','square','violation', 'status' , 'district','assignToRoleId', 'createdBy',
+        'documentId', 'operationName','assignToUserId','square','farmerid','violation', 'status' , 'district','assignToRoleId', 'createdBy',
         'modifiedBy', 'isDeleted'
     ];
 

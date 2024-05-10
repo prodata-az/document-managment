@@ -42,12 +42,17 @@ import { DocumentPermissionListComponent } from 'src/app/document/document-permi
 import { DocumentUploadNewVersionComponent } from 'src/app/document/document-upload-new-version/document-upload-new-version.component';
 import { SendEmailComponent } from 'src/app/document/send-email/send-email.component';
 import { CommonDialogService } from '@core/common-dialog/common-dialog.service';
+import { FormControl } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-document-library-list',
   templateUrl: './document-library-list.component.html',
   styleUrls: ['./document-library-list.component.scss'],
+  viewProviders: [DatePipe],
 })
+
+
 export class DocumentLibraryListComponent
   extends BaseComponent
   implements OnInit, AfterViewInit
@@ -57,14 +62,12 @@ export class DocumentLibraryListComponent
   displayedColumns: string[] = [
     'action',
     'name',
-    'square',
-    'violation', 
-    'status' , 
+    'farmerid',
     'district',
     'categoryName',
     'createdDate',
-    'expiredDate',
-    'createdBy',
+    // 'expiredDate',
+    // 'createdBy',
   ];
   isLoadingResults = true;
   documentResource: DocumentResource;
@@ -75,8 +78,13 @@ export class DocumentLibraryListComponent
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('input') input: ElementRef;
   @ViewChild('metatag') metatag: ElementRef;
+  @ViewChild('farmerid') farmerid: ElementRef;
   selection = new SelectionModel<DocumentInfo>(true, []);
 
+  createdDate = new FormControl('');
+
+
+  max = new Date();
   constructor(
     private documentLibraryService: DocumentLibraryService,
     private categoryService: CategoryService,
@@ -87,7 +95,8 @@ export class DocumentLibraryListComponent
     private commonService: CommonService,
     private toastrService: ToastrService,
     private dialog: MatDialog,
-    private commonDialogService: CommonDialogService
+    private commonDialogService: CommonDialogService,
+    private datePipe: DatePipe
   ) {
     super();
     this.documentResource = new DocumentResource();
@@ -118,6 +127,7 @@ export class DocumentLibraryListComponent
           this.documentResource.orderBy =
             this.sort.active + ' ' + this.sort.direction;
           this.dataSource.loadDocuments(this.documentResource);
+          this.selection.clear();
         })
       )
       .subscribe();
@@ -128,8 +138,25 @@ export class DocumentLibraryListComponent
         distinctUntilChanged(),
         tap(() => {
           this.paginator.pageIndex = 0;
+          this.documentResource.skip = 0;
           this.documentResource.name = this.input.nativeElement.value;
           this.dataSource.loadDocuments(this.documentResource);
+          this.selection.clear();
+        })
+      )
+      .subscribe();
+
+      this.sub$.sink = fromEvent(this.farmerid.nativeElement, 'keyup')
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        tap(() => {
+          
+          this.paginator.pageIndex = 0;
+          this.documentResource.skip = 0;
+          this.documentResource.farmerid = this.farmerid.nativeElement.value;
+          this.dataSource.loadDocuments(this.documentResource);
+          this.selection.clear();
         })
       )
       .subscribe();
@@ -140,12 +167,43 @@ export class DocumentLibraryListComponent
         distinctUntilChanged(),
         tap(() => {
           this.paginator.pageIndex = 0;
+          this.documentResource.skip = 0;
           this.documentResource.metaTags = this.metatag.nativeElement.value;
           this.dataSource.loadDocuments(this.documentResource);
         })
       )
       .subscribe();
+      this.sub$.sink = this.createdDate.valueChanges
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        tap((value: any) => {
+          this.paginator.pageIndex = 0;
+          this.documentResource.skip = 0;
+          if (value) {
+            this.documentResource.createDate = new Date(value).toISOString();
+          } else {
+            this.documentResource.createDate = null;
+          }
+          this.documentResource.skip = 0;
+          this.dataSource.loadDocuments(this.documentResource);
+        })
+      )
+      .subscribe();
   }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
+  }
+
 
   onCategoryChange(filtervalue: any) {
     if (filtervalue.value) {
@@ -160,9 +218,15 @@ export class DocumentLibraryListComponent
   getCategories(): void {
     this.categoryService.getAllCategoriesForDropDown().subscribe((c) => {
       this.categories = c;
+      
       this.setDeafLevel();
     });
   }
+
+  // getValueStatus(value): any{
+    
+  //   return Object.keys(StatusEnum).filter(el => isNaN(+el))[value]
+  // }
 
   setDeafLevel(parent?: Category, parentId?: string) {
     const children = this.categories.filter((c) => c.parentId == parentId);
@@ -202,6 +266,8 @@ export class DocumentLibraryListComponent
           this.documentResource.pageSize = paginationParam.pageSize;
           this.documentResource.skip = paginationParam.skip;
           this.documents = [...resp.body];
+          console.log(this.documents);
+          
           this.isLoadingResults = false;
         },
         () => (this.isLoadingResults = false)
@@ -255,15 +321,14 @@ export class DocumentLibraryListComponent
     });
   }
 
+
   onDocumentView(document: DocumentInfo) {
     const urls = document.url.split('.');
     const extension = urls[1];
     const documentView: DocumentView = {
       documentId: document.id,
       name: document.name,
-      square: document.square,
-      violation: document.violation,
-      status: document.status,
+      farmerid: document.farmerid,
       district: document.district,
       extension: extension,
       isRestricted: document.isAllowDownload,

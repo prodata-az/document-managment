@@ -46,6 +46,7 @@ export class DocumentVersionHistoryComponent extends BaseComponent {
       documentId: document.id,
       name: this.data.name,
       square: this.data.square,
+      farmerid: this.data.farmerid,
       violation: this.data.violation,
       status: this.data.status,
       district: this.data.district,

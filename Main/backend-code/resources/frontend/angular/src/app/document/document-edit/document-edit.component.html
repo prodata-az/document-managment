@@ -14,6 +14,14 @@
         </div>
       </div>
       <div class="col-sm-12 m-b-10">
+        <label class="form-label">{{'META_TAGS' | translate}}</label>
+        <input formControlName="farmerid" class="form-control" type="text">
+        <div class="text-danger"
+          *ngIf="documentForm.get('farmerid').touched && documentForm.get('farmerid').hasError('required')">
+          {{'NAME_IS_REQUIRED' | translate}}
+        </div>
+      </div>
+      <div class="col-sm-12 m-b-10">
         <label class="form-label">{{'CONTRACT_SQUARE' | translate}}</label>
         <input formControlName="square" class="form-control" type="text">
         <div class="text-danger"
@@ -21,30 +29,41 @@
           {{'NAME_IS_REQUIRED' | translate}}
         </div>
       </div>
-      <div class="col-sm-12 m-b-10">
+      <div class="col-md-4">
         <label class="form-label">{{'CONTRACT_VIOLATION' | translate}}</label>
-        <input formControlName="violation" class="form-control" type="text">
+        <select [(ngModel)]="violationeditActive"  formControlName="violation" class="form-control" type="text"  >
+          <option value="1">Active</option>
+          <option value="0">Deactive</option>
+       </select>
         <div class="text-danger"
-          *ngIf="documentForm.get('violation').touched && documentForm.get('violation').hasError('required')">
+          *ngIf="documentForm.get('violation').touched && documentForm.get('violation')?.hasError('required')">
           {{'NAME_IS_REQUIRED' | translate}}
         </div>
       </div>
-      <div class="col-sm-12 m-b-10">
+      <div class="col-md-4">
         <label class="form-label">{{'CONTRACT_STATUS' | translate}}</label>
-        <input formControlName="status" class="form-control" type="text">
+        <select [(ngModel)]="statuseditActive" formControlName="status" class="form-control" type="text"  >
+          <option value="0">Created</option>
+          <option value="1">Approved</option>
+          <option value="2">Checked</option>
+          <option value="3">Deleted</option>
+       </select>
         <div class="text-danger"
-          *ngIf="documentForm.get('status').touched && documentForm.get('status').hasError('required')">
+          *ngIf="documentForm.get('status').touched && documentForm.get('status')?.hasError('required')">
           {{'NAME_IS_REQUIRED' | translate}}
         </div>
       </div>
-      <div class="col-sm-12 m-b-10">
+      <!-- <div class="col-md-4">
         <label class="form-label">{{'CONTRACT_DISTRICT' | translate}}</label>
-        <input formControlName="district" class="form-control" type="text">
-        <div class="text-danger"
-          *ngIf="documentForm.get('district').touched && documentForm.get('district').hasError('required')">
-          {{'NAME_IS_REQUIRED' | translate}}
-        </div>
-      </div>
+        <mat-select class="form-select" formControlName="district">
+          <mat-option>-- {{'NONE' | translate}} --</mat-option>
+          <mat-option *ngFor="let district of districts" [value]="district.code">
+            <div class="country-item">
+                <b> {{district.name}}</b>
+            </div>
+          </mat-option>
+        </mat-select>
+      </div> -->
       <div class="col-sm-12 m-b-10">
         <label class="form-label">{{'CATEGORY' | translate}}</label>
         <mat-select class="form-select" formControlName="categoryId">
@@ -62,23 +81,6 @@
         <label class="form-label">{{'DESCRIPTION' | translate}}</label>
         <textarea formControlName="description" class="form-control">
         </textarea>
-      </div>
-      <div class="col-sm-6">
-        <div formArrayName="documentMetaTags"
-          *ngFor="let documentmetatag of documentMetaTagsArray.controls; let i=index">
-          <ng-container [formGroupName]="i">
-            <label class="form-label" *ngIf="i===0"> {{'META_TAGS' | translate}} </label>
-            <div class="input-group">
-              <input (change)="onMetatagChange($event,i)" formControlName="metatag" class="form-control" type="text">
-              <button *ngIf="i===0" (click)="onAddAnotherMetaTag()" class="btn btn-outline-success" type="button">
-                <app-feather-icons [icon]="'Plus'" [class]="'btn-success'"></app-feather-icons>
-              </button>
-              <button *ngIf="i!==0" (click)="onDeleteMetaTag(i)" class="btn btn-outline-danger" type="button">
-                <app-feather-icons [icon]="'Minus'" [class]="'btn-danger'"></app-feather-icons>
-              </button>
-            </div>
-          </ng-container>
-        </div>
       </div>
       <div class="m-t-10 col-md-12">
         <button *hasClaim="['ALL_DOCUMENTS_EDIT_DOCUMENT','ASSIGNED_DOCUMENTS_EDIT_DOCUMENT']"

@@ -18,6 +18,7 @@ import {
 } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Category } from '@core/domain-classes/category';
+import { District } from '@core/domain-classes/district';
 import { DocumentInfo } from '@core/domain-classes/document-info';
 import { DocumentMetaData } from '@core/domain-classes/documentMetaData';
 import { FileInfo } from '@core/domain-classes/file-info';
@@ -25,6 +26,7 @@ import { Role } from '@core/domain-classes/role';
 import { User } from '@core/domain-classes/user';
 import { CategoryService } from '@core/services/category.service';
 import { CommonService } from '@core/services/common.service';
+import { DistrictService } from '@core/services/district.service';
 import { environment } from '@environments/environment';
 import { BaseComponent } from 'src/app/base.component';
 
@@ -38,9 +40,12 @@ export class DocumentManagePresentationComponent
   extends BaseComponent
   implements OnInit
 {
+  violationActive: boolean;
+  statusActive: boolean;
   document: DocumentInfo;
   documentForm: UntypedFormGroup;
   extension = '';
+  districts: District[]  = [];
   categories: Category[] = [];
   allCategories: Category[] = [];
   @Input() loading: boolean;
@@ -62,8 +67,11 @@ export class DocumentManagePresentationComponent
     return <FormArray>this.documentForm.get('documentMetaTags');
   }
 
+  
+
   constructor(
     private fb: UntypedFormBuilder,
+    private districtService: DistrictService,
     private httpClient: HttpClient,
     private cd: ChangeDetectorRef,
     private categoryService: CategoryService,
@@ -74,11 +82,14 @@ export class DocumentManagePresentationComponent
   }
 
   ngOnInit(): void {
+    this.violationActive = false;
+    this.statusActive = false;
     this.createDocumentForm();
     this.getCategories();
     this.documentMetaTagsArray.push(this.buildDocumentMetaTag());
     this.getUsers();
     this.getRoles();
+    this.getDistricts();
   }
 
   getUsers() {
@@ -92,7 +103,14 @@ export class DocumentManagePresentationComponent
       .getRolesForDropdown()
       .subscribe((roles: Role[]) => (this.roles = roles));
   }
-
+  getDistricts() {
+    this.districtService.getAllDistricts().subscribe((c) => {
+      console.log(c);
+      
+      this.districts = c;
+      // this.setDeafLevel();
+    });
+  }
   getCategories() {
     this.categoryService.getAllCategoriesForDropDown().subscribe((c) => {
       this.categories = c;
@@ -131,6 +149,8 @@ export class DocumentManagePresentationComponent
     }
   }
 
+  
+
   fileUploadValidation(fileName: string) {
     this.documentForm.patchValue({
       url: fileName,
@@ -159,6 +179,7 @@ export class DocumentManagePresentationComponent
     this.documentForm = this.fb.group({
       name: ['', [Validators.required]],
       square: ['', [Validators.required]],
+      farmerid: ['', [Validators.required]],
       violation: ['', [Validators.required]],
       status: ['', [Validators.required]],
       district: ['', [Validators.required]],
@@ -233,6 +254,7 @@ export class DocumentManagePresentationComponent
       description: this.documentForm.get('description').value,
       name: this.documentForm.get('name').value,
       square: this.documentForm.get('square').value,
+      farmerid: this.documentForm.get('farmerid').value,
       violation: this.documentForm.get('violation').value,
       status: this.documentForm.get('status').value,
       district: this.documentForm.get('district').value,

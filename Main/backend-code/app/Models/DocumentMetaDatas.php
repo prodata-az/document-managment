@@ -21,7 +21,7 @@ class DocumentMetaDatas extends Model
 
     protected $fillable = [
         'documentId', 'metatag', 'createdBy',
-        'modifiedBy', 'isDeleted', 'square' ,'violation', 'status' , 'district',
+        'modifiedBy', 'isDeleted', 'square' ,'farmerid' ,'violation', 'status' , 'district',
     ];
 
     public function user()

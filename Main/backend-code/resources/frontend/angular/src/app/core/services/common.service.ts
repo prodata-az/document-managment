@@ -18,6 +18,7 @@ import {
 } from '@core/domain-classes/reminder-frequency';
 import { ReminderResourceParameter } from '@core/domain-classes/reminder-resource-parameter';
 import { Reminder } from '@core/domain-classes/reminder';
+import { District } from '@core/domain-classes/district';
 
 @Injectable({ providedIn: 'root' })
 export class CommonService {

@@ -104,6 +104,7 @@ export class CategoryListPresentationComponent extends BaseComponent {
       description: '',
       name: '',
       square: '',
+      farmerid: '',
       violation: '',
       status: '',
       district: '',
